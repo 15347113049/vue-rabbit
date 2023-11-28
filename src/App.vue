@@ -4,13 +4,9 @@
 <template>
   <!-- 一级路由出口 -->
   <RouterView />
-  <div class="test">111</div>
 </template>
 
 <style scoped lang="scss">
-.test {
-  color: $priceColor;
-}
 header {
   line-height: 1.5;
   max-height: 100vh;
