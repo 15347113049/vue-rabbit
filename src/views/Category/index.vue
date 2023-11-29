@@ -2,16 +2,20 @@
 import { getTopCategoryAPI } from "@/api/category";
 import { getBannerAPI } from "@/api/home";
 import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import GoodsItem from "../Home/components/GoodsItem.vue";
 
 const categoryData = ref({});
 const route = useRoute();
-const getCategory = async () => {
-  const res = await getTopCategoryAPI(route.params.id);
+const getCategory = async (id = route.params.id) => {
+  const res = await getTopCategoryAPI(id);
   categoryData.value = res.result;
 };
 onMounted(() => getCategory());
+// 目标：路由参数变化时，可以把分类数据接口重新发送
+onBeforeRouteUpdate((to) => {
+  getCategory(to.params.id);
+});
 
 // 获取banner
 const bannerList = ref([]);
