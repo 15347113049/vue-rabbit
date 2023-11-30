@@ -1,13 +1,29 @@
 <script setup>
 import { fetchHotGoodsAPI } from "@/api/detail";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
+
+// 设计props
+const props = defineProps({
+  type: {
+    type: Number, // 1代表24小时热销榜 2代表周热销榜 3代表总热销榜 可以使用type去适配title和数据列表
+    default: 1,
+  },
+});
+
+// 适配title
+const TypeMap = {
+  1: "24小时热榜",
+  2: "周热榜",
+};
+const title = computed(() => TypeMap[props.type]);
+
 const hotGoods = ref([]);
 const route = useRoute();
 const getHotGoods = async () => {
   const res = await fetchHotGoodsAPI({
     id: route.params.id,
-    type: 1,
+    type: props.type,
   });
   hotGoods.value = res.result;
 };
@@ -17,7 +33,7 @@ onMounted(() => getHotGoods());
 
 <template>
   <div class="goods-hot">
-    <h3>周日榜单</h3>
+    <h3>{{ title }}</h3>
     <!-- 商品区块 -->
     <RouterLink
       to="/"

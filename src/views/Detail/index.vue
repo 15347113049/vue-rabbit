@@ -129,7 +129,10 @@ onMounted(() => getGoods());
             </div>
             <!-- 24热榜+专题推荐 -->
             <div class="goods-aside"></div>
-            <DetailHot>
+            <DetailHot :type="1">
+              <!-- 24小时 -->
+            </DetailHot>
+            <DetailHot :type="2">
               <!-- 周 -->
             </DetailHot>
           </div>
@@ -169,7 +172,7 @@ onMounted(() => getGoods());
     }
 
     .goods-aside {
-      width: 280px;
+      width: 0px;
       min-height: 1000px;
     }
   }
