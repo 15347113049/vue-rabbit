@@ -1,5 +1,9 @@
 <script setup>
 import { ref } from "vue";
+import { ElMessage } from "element-plus";
+import "element-plus/theme-chalk/el-message.css";
+import { LoginAPI } from "@/api/user";
+import { useRouter } from "vue-router";
 const userInfo = ref({
   account: "",
   password: "",
@@ -19,6 +23,22 @@ const rules = {
       },
     },
   ],
+};
+// 获取表单实例
+const formRef = ref(null);
+const router = useRouter();
+// 登录
+const Login = () => {
+  const { account, password } = userInfo.value;
+  formRef.value.validate(async (valid) => {
+    if (valid) {
+      await LoginAPI({ account, password });
+      // 1. 提示用户
+      ElMessage({ type: "success", message: "登录成功" });
+      // 2. 跳转首页
+      router.replace({ path: "/" });
+    }
+  });
 };
 </script>
 
@@ -63,7 +83,9 @@ const rules = {
                   我已同意隐私条款和服务条款
                 </el-checkbox>
               </el-form-item>
-              <el-button size="large" class="subBtn">点击登录</el-button>
+              <el-button size="large" class="subBtn" @click="Login"
+                >点击登录</el-button
+              >
             </el-form>
           </div>
         </div>
