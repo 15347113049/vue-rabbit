@@ -4,16 +4,21 @@ import { LoginAPI } from '../api/user'
 import { ref } from 'vue'
 export const useUserStore = defineStore('user', () => {
     //定义state
-    const userInfo = ref([])
+    const userInfo = ref({})
     //定义action
     const getUserInfo = async ({ account, password }) => {
         const res = await LoginAPI({ account, password })
-        userInfo.value = res
+        userInfo.value = res.result
+    }
+    // 退出时清除用户信息
+    const clearUserInfo = () => {
+        userInfo.value = {}
     }
     //以对象格式把state、action return
     return {
         userInfo,
-        getUserInfo
+        getUserInfo,
+        clearUserInfo
     }
 }, {
     persist: {
