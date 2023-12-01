@@ -4,6 +4,7 @@ import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import DetailHot from "./components/DetailHot.vue";
 import ImageView from "@/components/ImageView/index.vue";
+import XtxSku from "@/components/XtxSku/index.vue";
 
 const goods = ref({});
 const route = useRoute();
@@ -12,6 +13,11 @@ const getGoods = async () => {
   goods.value = res.result;
 };
 onMounted(() => getGoods());
+
+// sku规则被操作时
+const SkuChange = (sku) => {
+  console.log(sku);
+};
 </script>
 
 <template>
@@ -92,6 +98,7 @@ onMounted(() => getGoods());
                 </dl>
               </div>
               <!-- sku组件 -->
+              <XtxSku :goods="goods" @change="SkuChange"></XtxSku>
 
               <!-- 数据组件 -->
 
