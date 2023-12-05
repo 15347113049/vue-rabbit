@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useUserStore } from './user'
-import { insertCartAPI, findNewCartListAPI } from '@/api/cart'
+import { insertCartAPI, findNewCartListAPI, delCartAPI } from '@/api/cart'
 export const useCartStore = defineStore('cart', () => {
     const userStore = useUserStore()
     const isLogin = computed(() => userStore.userInfo.token)
@@ -12,8 +12,7 @@ export const useCartStore = defineStore('cart', () => {
         const { skuId, count } = goods
         if (isLogin.value) {
             await insertCartAPI({ skuId, count })
-            const res = await findNewCartListAPI()
-            cartList.value = res.result
+            getCartList()
         } else {
             // 添加购物车操作
             // 已添加过 - count + 1
@@ -26,13 +25,20 @@ export const useCartStore = defineStore('cart', () => {
                 cartList.value.push(goods)
             }
         }
-
-
     }
     // 删除逻辑
-    const delCart = (skuId) => {
-        const idx = cartList.value.findIndex((item) => skuId === item.skuId)
-        cartList.value.splice(idx, 1)
+    const delCart = async (skuId) => {
+        if (isLogin.value) {
+            await delCartAPI([skuId])
+            getCartList()
+        } else {
+            const idx = cartList.value.findIndex((item) => skuId === item.skuId)
+            cartList.value.splice(idx, 1)
+        }
+    }
+    const getCartList = async () => {
+        const res = await findNewCartListAPI()
+        cartList.value = res.result
     }
     // 计算属性
     // 1. 总的数量 所有项的count之和
@@ -55,7 +61,6 @@ export const useCartStore = defineStore('cart', () => {
     const allCheck = (selected) => {
         cartList.value.forEach(item => item.selected = selected)
     }
-
 
     return {
         cartList,
